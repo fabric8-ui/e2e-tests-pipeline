@@ -16,7 +16,7 @@
  */
 @Library('github.com/fabric8io/fabric8-pipeline-library@master')
 def utils = new io.fabric8.Utils()
-fabric8EETestNode{
+fabric8EETestNode {
   container(name: 'test') {
     // TODO set up the env vars from a secret
     sh """
@@ -25,6 +25,12 @@ fabric8EETestNode{
         
         /test/ee_tests/entrypoint.sh
     """
+
+    post {
+      always {
+        archiveArtifacts artifacts: 'target/screenshots/*, *.log'
+      }
+    }
   }
 }
 
