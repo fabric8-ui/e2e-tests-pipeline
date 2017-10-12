@@ -16,8 +16,21 @@
  */
 @Library('github.com/fabric8io/fabric8-pipeline-library@master')
 def utils = new io.fabric8.Utils()
+fabric8UINode{
+  container(name: 'ui') {
+    // TODO set up the env vars from a secret
+    sh """
+    git clone https://github.com/fabric8io/fabric8-test.git /tmp/fabric8-test
+    cd /tmp/fabric8-test
+    ./pod_EE_tests.sh
+    """
+  }
+}
+
+/*
 clientsNode{
   container(name: 'clients') {
     sh 'gofabric8 e2e'
   }
 }
+*/
