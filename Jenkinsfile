@@ -20,7 +20,10 @@ fabric8EETestNode{
   container(name: 'test') {
     // TODO set up the env vars from a secret
     sh """
-      /test/ee_tests/entrypoint.sh
+        export TARGET_URL="https://openshift.io"
+        export TEST_PLATFORM="osio"
+        
+        /test/ee_tests/entrypoint.sh
     """
   }
 }
