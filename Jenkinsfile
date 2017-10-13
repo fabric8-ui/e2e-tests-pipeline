@@ -26,9 +26,13 @@ fabric8EETestNode {
         
         /test/ee_tests/entrypoint.sh
     """
-
     } finally {
-      archiveArtifacts artifacts: '/test/ee_tests/*.log'
+
+      echo ""
+      echo ""
+      echo "functional_tests.log:"
+      sh "cat /test/ee_tests/functional_tests.log"
+
       try {
         archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
       } catch (e) {
