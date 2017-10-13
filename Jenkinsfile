@@ -40,17 +40,19 @@ try {
   }
 } finally {
 
-  echo "unstashing ${screenshotsStash}"
-  unstash screenshotsStash
+  node {
+    echo "unstashing ${screenshotsStash}"
+    unstash screenshotsStash
 
 
-  echo "how lets try archive them: ${screenshotsStash}"
-  try {
+    echo "how lets try archive them: ${screenshotsStash}"
+    try {
 
-    archiveArtifacts artifacts: 'screenshots*'
-    //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
-  } catch (e) {
-    echo "could not find the screenshots ${e}"
+      archiveArtifacts artifacts: 'screenshots*'
+      //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
+    } catch (e) {
+      echo "could not find the screenshots ${e}"
+    }
   }
 }
 
