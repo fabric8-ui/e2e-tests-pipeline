@@ -15,33 +15,42 @@
  * limitations under the License.
  */
 @Library('github.com/fabric8io/fabric8-pipeline-library@master')
-def utils = new io.fabric8.Utils()
+def screenshotsStash = "screenshots"
 
-fabric8EETestNode {
-  container(name: 'test') {
-    try {
-      sh """
+try {
+  fabric8EETestNode {
+    container(name: 'test') {
+      try {
+        sh """
         export TARGET_URL="https://openshift.io"
         export TEST_PLATFORM="osio"
         
         /test/ee_tests/entrypoint.sh
     """
-    } finally {
+      } finally {
 
-      echo ""
-      echo ""
-      echo "functional_tests.log:"
-      sh "cat /test/ee_tests/functional_tests.log"
+        echo ""
+        echo ""
+        echo "functional_tests.log:"
+        sh "cat /test/ee_tests/functional_tests.log"
 
-      try {
-        stash name: 'screenshots', includes: "/test/ee_tests/target/screenshots/*"
-        echo "created stash: screenshots"
-
-        archiveArtifacts artifacts: 'screenshots*'
-        //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
-      } catch (e) {
-        // ignore
+        stash name: screenshotsStash, includes: "/test/ee_tests/target/screenshots/*"
       }
     }
   }
+} finally {
+
+  echo "unstashing ${screenshotsStash}"
+  unstash screenshotsStash
+
+
+  echo "how lets try archive them: ${screenshotsStash}"
+  try {
+
+    archiveArtifacts artifacts: 'screenshots*'
+    //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
+  } catch (e) {
+    echo "could not find the screenshots ${e}"
+  }
 }
+
