@@ -28,9 +28,9 @@ fabric8EETestNode {
     """
 
     } finally {
-      archiveArtifacts artifacts: '*.log'
+      archiveArtifacts artifacts: '/test/ee_tests/*.log'
       try {
-        archiveArtifacts artifacts: 'target/screenshots/*'
+        archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
       } catch (e) {
         // ignore
       }
