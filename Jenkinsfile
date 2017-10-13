@@ -34,7 +34,11 @@ fabric8EETestNode {
       sh "cat /test/ee_tests/functional_tests.log"
 
       try {
-        archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
+        stash name: 'screenshots', includes: "/test/ee_tests/target/screenshots/*"
+        echo "created stash: screenshots"
+
+        archiveArtifacts artifacts: 'screenshots*'
+        //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
       } catch (e) {
         // ignore
       }
