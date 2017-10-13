@@ -34,7 +34,10 @@ fabric8EETestNode {
         echo "functional_tests.log:"
         sh "cat /test/ee_tests/functional_tests.log"
 
-        stash name: screenshotsStash, includes: "/test/ee_tests/target/screenshots/*"
+        sh "mkdir -p screenshots"
+        sh "cp -r /test/ee_tests/target/screenshots/* screenshots"
+
+        stash name: screenshotsStash, includes: "screenshots/*"
       }
     }
   } finally {
@@ -44,15 +47,7 @@ fabric8EETestNode {
 
     echo "how lets try archive them: ${screenshotsStash}"
     try {
-
-      archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
-    } catch (e) {
-      echo "could not find: /test/ee_tests/target/screenshots/* ${e}"
-    }
-    try {
-
-      archiveArtifacts artifacts: 'screenshots*'
-      //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
+      archiveArtifacts artifacts: 'screenshots/*'
     } catch (e) {
       echo "could not find: screenshots* ${e}"
     }
