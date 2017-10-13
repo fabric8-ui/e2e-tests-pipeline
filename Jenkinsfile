@@ -28,8 +28,12 @@ fabric8EETestNode {
     """
 
     } finally {
-      archiveArtifacts artifacts: 'target/screenshots/*'
       archiveArtifacts artifacts: '*.log'
+      try {
+        archiveArtifacts artifacts: 'target/screenshots/*'
+      } catch (e) {
+        // ignore
+      }
     }
   }
 }
