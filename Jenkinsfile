@@ -28,7 +28,8 @@ fabric8EETestNode {
     """
 
     } finally {
-      archiveArtifacts artifacts: 'target/screenshots/*,*.log'
+      archiveArtifacts artifacts: 'target/screenshots/*'
+      archiveArtifacts artifacts: '*.log'
     }
   }
 }
