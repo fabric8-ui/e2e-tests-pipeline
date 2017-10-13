@@ -17,8 +17,8 @@
 @Library('github.com/fabric8io/fabric8-pipeline-library@master')
 def screenshotsStash = "screenshots"
 
-try {
-  fabric8EETestNode {
+fabric8EETestNode {
+  try {
     container(name: 'test') {
       try {
         sh """
@@ -37,21 +37,24 @@ try {
         stash name: screenshotsStash, includes: "/test/ee_tests/target/screenshots/*"
       }
     }
-  }
-} finally {
+  } finally {
 
-  node {
     echo "unstashing ${screenshotsStash}"
     unstash screenshotsStash
 
-
     echo "how lets try archive them: ${screenshotsStash}"
+    try {
+
+      archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
+    } catch (e) {
+      echo "could not find: /test/ee_tests/target/screenshots/* ${e}"
+    }
     try {
 
       archiveArtifacts artifacts: 'screenshots*'
       //archiveArtifacts artifacts: '/test/ee_tests/target/screenshots/*'
     } catch (e) {
-      echo "could not find the screenshots ${e}"
+      echo "could not find: screenshots* ${e}"
     }
   }
 }
