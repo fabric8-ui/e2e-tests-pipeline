@@ -15,42 +15,11 @@
  * limitations under the License.
  */
 @Library('github.com/fabric8io/fabric8-pipeline-library@master')
-def screenshotsStash = "screenshots"
+def dummy = "avoid compile error"
 
-fabric8EETestNode {
-  try {
-    container(name: 'test') {
-      try {
-        sh """
-        export TARGET_URL="https://openshift.io"
-        export TEST_PLATFORM="osio"
-        
-        /test/ee_tests/entrypoint.sh
-    """
-      } finally {
+fabric8EETest userSecret: "fabric8-ui-pr-user", beforeTest: """
 
-        echo ""
-        echo ""
-        echo "functional_tests.log:"
-        sh "cat /test/ee_tests/functional_tests.log"
+  export TARGET_URL="https://openshift.io"
+  export TEST_PLATFORM="osio"
 
-        sh "mkdir -p screenshots"
-        sh "cp -r /test/ee_tests/target/screenshots/* screenshots"
-
-        stash name: screenshotsStash, includes: "screenshots/*"
-      }
-    }
-  } finally {
-
-    echo "unstashing ${screenshotsStash}"
-    unstash screenshotsStash
-
-    echo "how lets try archive them: ${screenshotsStash}"
-    try {
-      archiveArtifacts artifacts: 'screenshots/*'
-    } catch (e) {
-      echo "could not find: screenshots* ${e}"
-    }
-  }
-}
-
+"""
